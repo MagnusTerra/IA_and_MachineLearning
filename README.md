@@ -62,7 +62,7 @@ pip install tensorflow-cpu
 Una vez en marcha, puedes probar tu versión de TensorFlow con el siguiente código
 siguiente:
 
-```sh
+```python
 import tensorflow as tf
 print(tf.__version__)
 ```
