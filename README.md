@@ -66,3 +66,76 @@ siguiente:
 import tensorflow as tf
 print(tf.__version__)
 ```
+#
+## Introducción al aprendizaje automático
+Como vimos anteriormente en el capítulo, el paradigma del aprendizaje automático es uno en el que usted
+datos, esos datos están etiquetados, y queremos averiguar las reglas que hacen coincidir los
+con las etiquetas. El escenario más simple posible para mostrar esto en código es el siguiente.
+Considere estos dos conjuntos de números:
+
+```python
+X = –1, 0, 1, 2, 3, 4
+Y = –3, –1, 1, 3, 5, 7
+```
+
+Existe una relación entre los valores X e Y (por ejemplo, si X es -1 entonces Y es -3,
+si X es 3, Y es 5, etc.). ¿Te das cuenta?
+Después de unos segundos, probablemente hayas visto que el patrón aquí es Y = 2X - 1. ¿Cómo
+¿Cómo lo has conseguido? Cada persona lo resuelve de una forma, pero yo suelo oír la observación de que
+observación de que X aumenta en 1 en su secuencia, e Y aumenta en 2; por lo tanto, Y = 2X
++/- algo. A continuación, miran cuando X = 0 y ven que Y = -1, por lo que calculan que
+la respuesta podría ser Y = 2X - 1. A continuación, miran los otros valores y ven que esta
+hipótesis "encaja", y la respuesta es Y = 2X - 1.
+Esto es muy parecido al proceso de aprendizaje automático. Echemos un vistazo a algunos Tensor-
+Flow que podrías escribir para que una red neuronal haga este cálculo por ti.
+#
+Aquí está el código completo, usando las APIs de TensorFlow Keras. No te preocupes si aún no tiene sentido.
+sentido todavía; vamos a ir a través de él línea por línea:
+```python
+import tensorflow as tf
+import numpy as np
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense
+model = Sequential([Dense(units=1, input_shape=[1])])
+model.compile(optimizer='sgd', loss='mean_squared_error')
+xs = np.array([-1.0, 0.0, 1.0, 2.0, 3.0, 4.0], dtype=float)
+ys = np.array([-3.0, -1.0, 1.0, 3.0, 5.0, 7.0], dtype=float)
+model.fit(xs, ys, epochs=500)
+print(model.predict([10.0]))
+```
+Empecemos por la primera línea. Probablemente hayas oído hablar de las redes neuronales, y hayas
+probablemente hayas visto diagramas que las explican usando capas de neuronas interconectadas, un
+un poco como
+
+[![N|Solid](https://i.imgur.com/SkWdN6z.png)](https://nodesource.com/products/nsolid)
+
+Cuando veas una red neuronal como ésta, considera que cada uno de los "círculos" es una neurona
+y cada una de las columnas de círculos como una capa. Así, en la Figura 1-18, hay tres
+capas: la primera tiene cinco neuronas, la segunda tiene cuatro y la tercera tiene dos.
+
+Si volvemos a nuestro código y miramos sólo la primera línea, veremos que estamos definiendo
+la red neuronal más simple posible. Sólo hay una capa, y contiene sólo una
+neurona:
+```python
+model = Sequential([Dense(units=1, input_shape=[1])])
+```
+
+Cuando usas TensorFlow, defines tus capas usando Sequential. Dentro del
+Sequential, se especifica el aspecto de cada capa. Sólo tenemos una línea dentro de
+nuestra Sequential, por lo que sólo tenemos una capa.
+
+A continuación, define cómo se ve la capa utilizando la API keras.layers. Hay muchos
+de diferentes tipos de capas, pero aquí estamos usando una capa Densa. "Dense" significa un conjunto de
+neuronas completamente (o densamente) conectadas, que es lo que puedes ver en la Figura 1-18 donde
+cada neurona está conectada a cada neurona de la capa siguiente. Es la forma más común
+tipo de capa. Nuestra capa Densa tiene unidades=1 especificadas, así que tenemos sólo una capa densa con una neurona en toda nuestra capa.
+con una neurona en toda nuestra red neuronal. Por último, cuando se especifica la primera
+capa en una red neuronal (en este caso, es nuestra única capa), tiene que decirle cuál es la forma de los datos de entrada.
+
+forma de los datos de entrada. En este caso nuestros datos de entrada es nuestro X, que es sólo un único
+por lo que especificamos que esa es su forma.
+La siguiente línea es donde realmente empieza la diversión. Veámoslo de nuevo:
+
+```python
+model.compile(optimizer='sgd', loss='mean_squared_error')
+```
